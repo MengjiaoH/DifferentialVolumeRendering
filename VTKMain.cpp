@@ -58,12 +58,16 @@ int main(int argc, const char** argv)
     for(int i = 1; i < volumes.size(); i++){
         DifferentialVolume<float> differentialVolume;
         for(int v = 0; v < volumes[i].voxels.size(); ++v){
-            if(std::abs(volumes[i].voxels[v] - volumes[i - 1].voxels[v]) > 0.1f){
+            if(volumes[i].voxels[v] != volumes[i - 1].voxels[v]){
                 differentialVolume.indices.push_back(v);
                 differentialVolume.values.push_back(volumes[i].voxels[v]);
-            }else{
-                // std::cout << volumes[i].voxels[v] - volumes[i - 1].voxels[v] << " ";
             }
+            // if(std::abs(volumes[i].voxels[v] - volumes[i - 1].voxels[v]) > 0.1f){
+            //     differentialVolume.indices.push_back(v);
+            //     differentialVolume.values.push_back(volumes[i].voxels[v]);
+            // }else{
+            //     // std::cout << volumes[i].voxels[v] - volumes[i - 1].voxels[v] << " ";
+            // }
         }
         differentialVolumes.push_back(differentialVolume);
     }

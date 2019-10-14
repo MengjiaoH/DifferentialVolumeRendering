@@ -12,7 +12,7 @@ void loadVTK(std::string file, Volume<float> &volume)
     //Get Dimensions
     int dim[3] = {0, 0, 0};
     grid -> GetDimensions(dim);
-    // std::cout << " Dimensions " << dim[0] << " " << dim[1] << " " << dim[2] << std::endl;
+    std::cout << " Dimensions " << dim[0] << " " << dim[1] << " " << dim[2] << std::endl;
     volume.dim.x = dim[0]; volume.dim.y = dim[1]; volume.dim.z = dim[2];
     //Get Data Array
     vtkSmartPointer<vtkGeometryFilter> geometryFilter = vtkSmartPointer<vtkGeometryFilter>::New();
