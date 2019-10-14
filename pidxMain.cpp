@@ -74,6 +74,16 @@ int main(int argc, const char** argv)
         float percentage = d.indices.size() / (float)volumes[0].voxels.size() * 100.f;
         std::cout << "differential volume has " << d.indices.size() << " differences. Changed " <<  percentage << " percentage" << std::endl;
     }
+
+    for(int i = 1; i < differentialVolumes.size(); i++){
+        DifferentialVolume<double> pre = differentialVolumes[i - 1];
+        DifferentialVolume<double> post = differentialVolumes[i];
+        if(pre.indices == post.indices){
+            std::cout << "Differences indices between time step " << i << " and " << i - 1 << " is equal." << std::endl;
+        }else{
+            std::cout << "Differences indices between time step " << i << " and " << i - 1 << " is not equal." << std::endl;
+        }
+    }
     
 
     MPI_Finalize();    

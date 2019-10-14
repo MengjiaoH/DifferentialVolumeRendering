@@ -62,12 +62,6 @@ int main(int argc, const char** argv)
                 differentialVolume.indices.push_back(v);
                 differentialVolume.values.push_back(volumes[i].voxels[v]);
             }
-            // if(std::abs(volumes[i].voxels[v] - volumes[i - 1].voxels[v]) > 0.1f){
-            //     differentialVolume.indices.push_back(v);
-            //     differentialVolume.values.push_back(volumes[i].voxels[v]);
-            // }else{
-            //     // std::cout << volumes[i].voxels[v] - volumes[i - 1].voxels[v] << " ";
-            // }
         }
         differentialVolumes.push_back(differentialVolume);
     }
@@ -77,6 +71,17 @@ int main(int argc, const char** argv)
         float percentage = d.indices.size() / (float)volumes[0].voxels.size() * 100;
         std::cout << "differential volume has " << d.indices.size() << " differences. Changed " <<  percentage << " percentage" << std::endl;
     }
+    // for(int i = 1; i < differentialVolumes.size(); i++){
+    //     DifferentialVolume<float> pre = differentialVolumes[i - 1];
+    //     DifferentialVolume<float> post = differentialVolumes[i];
+    //     if(pre.indices == post.indices){
+    //         std::cout << "Differences indices between time step " << i << " and " << i - 1 << " is equal." << std::endl;
+    //     }else{
+    //         std::cout << "Differences indices between time step " << i << " and " << i - 1 << " is not equal." << std::endl;
+    //     }
+        
+
+    // }
 
     return 0;
 }
