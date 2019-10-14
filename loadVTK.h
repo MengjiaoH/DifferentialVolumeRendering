@@ -17,9 +17,4 @@
 
 void loadVTK(std::string file, Volume<float> &volume);
 
-struct sort_timestep
-{
-    inline bool operator() (const timesteps &a, const timesteps &b) {
-        return a.timeStep < b.timeStep;
-    }
-};
+

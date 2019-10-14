@@ -32,6 +32,7 @@ struct PIDXVolume {
     int bitsPerSample = 0;
     std::string type;
 
+    std::vector<double> voxels;
     // UI data
     std::string currentVariableName;
     int currentVariable;
@@ -41,7 +42,7 @@ struct PIDXVolume {
                const std::string &currentVariableName, 
                size_t currentTimestep);
     
-    PIDXVolume(const PIDXVolume &p) = delete;
+    //PIDXVolume(const PIDXVolume &p) = delete;
     PIDXVolume& operator=(const PIDXVolume &p) = delete;
     ~PIDXVolume();
                             
