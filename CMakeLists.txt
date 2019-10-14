@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.11)
 project(DifferentialVolumeRendering)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
 ## Find VTK
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
