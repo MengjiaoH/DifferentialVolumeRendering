@@ -8,8 +8,8 @@ std::pair<T, T> compute_range(const std::vector<char> &data) {
   return std::make_pair(*minmax.first, *minmax.second);
 }
 
-ospcommon::vec2f compute_volume_range(const std::vector<char> &data, const std::string &type) {
-  ospcommon::vec2f range(0, 0);
+ospcommon::math::vec2f compute_volume_range(const std::vector<char> &data, const std::string &type) {
+  ospcommon::math::vec2f range(0, 0);
   if (type == "uchar") {
     auto minmax = compute_range<uint8_t>(data);
     range.x = static_cast<float>(minmax.first);
@@ -46,9 +46,9 @@ bool computeDivisor(int x, int &divisor) {
     return false;
 }
 
-ospcommon::vec3i computeGrid(int num)
+ospcommon::math::vec3i computeGrid(int num)
 {
-    ospcommon::vec3i grid(1);
+    ospcommon::math::vec3i grid(1);
     int axis = 0;
     int divisor = 0;
     while (computeDivisor(num, divisor)) {
@@ -209,7 +209,7 @@ void PIDXVolume::update(){
             "only scalar types are supported!");
     }
 
-    ospcommon::vec2f localValueRange = compute_volume_range(data, idx_var.type);
+    ospcommon::math::vec2f localValueRange = compute_volume_range(data, idx_var.type);
     MPI_Allreduce(&localValueRange.x, &valueRange.x, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
     MPI_Allreduce(&localValueRange.y, &valueRange.y, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
 
