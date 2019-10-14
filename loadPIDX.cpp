@@ -100,7 +100,7 @@ PIDXVolume::PIDXVolume(const std::string &path, const std::string &currentVariab
 }
 
 PIDXVolume::~PIDXVolume() {
-    PIDX_close_access(pidxAccess);
+    //PIDX_close_access(pidxAccess);
     //volume.release();
 }
 
@@ -190,7 +190,7 @@ void PIDXVolume::update(){
     data.resize(bytesPerSample * valuesPerSample * nLocalVals, 0);
     PIDX_CHECK(PIDX_variable_read_data_layout(var, pLocalOffset, pLocalDims,
                                               data.data(), PIDX_row_major));
-
+    
     using namespace std::chrono;
     auto startLoad = high_resolution_clock::now();
     PIDX_CHECK(PIDX_close(pidxFile));
@@ -198,6 +198,9 @@ void PIDXVolume::update(){
     const double loadTime = duration_cast<milliseconds>(endLoad - startLoad).count() * 0.001;
     const double bandwidthMB = (data.size() * 1e-6) / loadTime;
     
+    voxels.resize(valuesPerSample * nLocalVals, 0);
+    std::memcpy(voxels.data(), data.data(), valuesPerSample * nLocalVals); 
+
     if (world_rank == 0) {
         std::cout << "Rank " << world_rank << " load time: " << loadTime << "s\n" << "bandwidth: " << bandwidthMB << " MB/s\n";
         const size_t totalBytes = fullDims.x * fullDims.y * fullDims.z * bytesPerSample * valuesPerSample;
@@ -212,10 +215,10 @@ void PIDXVolume::update(){
     ospcommon::math::vec2f localValueRange = compute_volume_range(data, idx_var.type);
     MPI_Allreduce(&localValueRange.x, &valueRange.x, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
     MPI_Allreduce(&localValueRange.y, &valueRange.y, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
-
-    if(PIDX_close_access(pidxAccess) != PIDX_success)
-        throw std::runtime_error("PIDX_close_access");
-    if (PIDX_free_metadata_cache(cache) != PIDX_success)
-        throw std::runtime_error("PIDX_free_meta_data_cache");
+    data.clear();
+    //if(PIDX_close_access(pidxAccess) != PIDX_success)
+        //throw std::runtime_error("PIDX_close_access");
+    //if (PIDX_free_metadata_cache(cache) != PIDX_success)
+        //throw std::runtime_error("PIDX_free_meta_data_cache");
 }
 

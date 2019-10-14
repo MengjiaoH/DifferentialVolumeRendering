@@ -40,4 +40,9 @@ struct IDXVar {
     std::string type;
 };
 
-
+struct sort_timestep
+{
+    inline bool operator() (const timesteps &a, const timesteps &b) {
+        return a.timeStep < b.timeStep;
+    }
+};
