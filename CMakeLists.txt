@@ -13,7 +13,9 @@ find_package(ospcommon REQUIRED)
 
 add_library(libs dataType.h
                  parseArgs.h
-                 parseArgs.cpp)
+                 parseArgs.cpp
+                 arcballCamera.h
+                 arcballCamera.cpp)
 
 target_link_libraries(libs ospcommon::ospcommon)
 

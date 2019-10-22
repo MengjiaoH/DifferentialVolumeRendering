@@ -27,6 +27,16 @@ template<typename T> struct DifferentialVolume
     std::vector<T> values;
 };
 
+struct tileList
+{
+    std::vector<ospcommon::math::vec2i> tileID;
+    tileList(std::vector<ospcommon::math::vec2i> tileID);
+};
+
+tileList::tileList(std::vector<ospcommon::math::vec2i> tileID) 
+    :tileID(tileID)
+{}
+
 
 timesteps::timesteps(const int timeStep, const std::string &fileDir)
     : timeStep(timeStep), fileDir(fileDir)
