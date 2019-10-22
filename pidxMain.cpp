@@ -48,14 +48,14 @@ int main(int argc, const char** argv)
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
     int numFiles = 0;
     for(auto t : files){
-        if(numFiles < count){
+        //if(numFiles < count){
             std::cout << "file dir " << t.fileDir << " time step = " << t.timeStep << std::endl;
             // load all volumes
             std::string variablename = "";
             PIDXVolume v(t.fileDir,  variablename.c_str(), (size_t)t.timeStep);
             volumes.push_back(v);
-        }
-        numFiles++;
+        //}
+        //numFiles++;
     }
     std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
@@ -117,6 +117,12 @@ int main(int argc, const char** argv)
     //     }else{
     //         std::cout << "Differences indices between time step " << i << " and " << i - 1 << " is not equal." << std::endl;
     //     }
+    //     if(pre.values == post.values){
+    //         std::cout << "Differences values between time step " << i << " and " << i - 1 << " is equal." << std::endl;
+    //     }else{
+    //         std::cout << "Differences values between time step " << i << " and " << i - 1 << " is not equal." << std::endl;
+    //     }
+
     // }
     
 
