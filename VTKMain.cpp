@@ -43,7 +43,7 @@ int main(int argc, const char** argv)
     std::vector<DifferentialVolume<float>> differentialVolumes;
     ospcommon::math::box3f worldBound = ospcommon::math::empty;
     // only load 2 time steps for testing now 
-    int count = 5;
+    int count = 4;
 
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
     for(auto t : files){
@@ -64,13 +64,16 @@ int main(int argc, const char** argv)
     worldBound = ospcommon::math::box3f(ospcommon::math::vec3f(0, 0, 0), ospcommon::math::vec3f(volumes[0].dim.x, volumes[0].dim.y, volumes[0].dim.z));
 
     // Set frameBuffer size and tile size
-    ospcommon::math::vec2i imgSize(1900, 1200);
+    ospcommon::math::vec2i imgSize(23040, 5670);
     ospcommon::math::vec2i tileSize(256);
 
     // Set camera 
     ArcballCamera arcballCamera(worldBound, imgSize);
     std::vector<ospcommon::math::vec2i> tileIDs;
     std::vector<tileList> tileLists;
+
+    std::cout << "================================================" << std::endl;
+    std::cout << "Experiments on changing time steps " << std::endl;
     
     // Extracting differential volume and calculate the changed pixel corresponding to changed voxel
     for(int i = 1; i < volumes.size(); i++){
@@ -91,10 +94,15 @@ int main(int argc, const char** argv)
         // for(int x = 0; x < 500; x++){
         //     std::cout << "x = " << x << " tile id = " << tileIDs[x].x << " " << tileIDs[x].y << std::endl;
         // }
-        std::vector<ospcommon::math::vec2i>::iterator ip = std::unique(tileIDs.begin(), tileIDs.begin() + tileIDs.size()); 
-        tileIDs.resize(std::distance(tileIDs.begin(), ip)); 
         // Remove duplicated tileIDs
-        std::cout << "tileId size after remove = " << tileIDs.size()  << " tile ID = (" << tileIDs[0].x << ", " << tileIDs[0].y << ")" << std::endl;
+        remove(tileIDs);
+        // std::vector<ospcommon::math::vec2i>::iterator ip = std::unique(tileIDs.begin(), tileIDs.begin() + tileIDs.size()); 
+        // tileIDs.resize(std::distance(tileIDs.begin(), ip)); 
+
+        std::cout << "tileId size after remove = " << tileIDs.size() << std::endl;
+        for(int s = 0; s < tileIDs.size(); s++){
+            std::cout << "tile id = (" << tileIDs[s].x << ", " << tileIDs[s].y << ")" << std::endl;
+        }
         tileList tile_list(tileIDs);
         tileLists.push_back(tile_list);
         differentialVolumes.push_back(differentialVolume);
@@ -103,12 +111,52 @@ int main(int argc, const char** argv)
     // Remove all other volumes and only keep the first timestep
     volumes.erase (volumes.begin() + 1, volumes.end() - 1);
 
+
+    std::cout << "================================================" << std::endl;
     std::cout << std::endl;
-    std::cout << "There are " << volumes[0].voxels.size() << " voxels in total." << std::endl;
-    for(auto d : differentialVolumes){
-        float percentage = d.indices.size() / (float)volumes[0].voxels.size() * 100;
-        std::cout << "differential volume has " << d.indices.size() << " differences. Changed " <<  percentage << " percentage" << std::endl;
+
+    std::cout << "================================================" << std::endl;
+    std::cout << "Experiments on zooming camera " << std::endl;
+
+
+    // Zoom in and out camera and check tiles 
+    for(int z = 0; z < 10; z++){
+        arcballCamera.zoom(-1);
+        // for(int i = 0; i < differentialVolumes.size(); i++){
+            std::vector<int> indices = differentialVolumes[1].indices;
+            for(int j = 0; j < indices.size(); j++){
+                ospcommon::math::vec3i voxelPos = indexToPosition(indices[j], volumes[0].dim);
+                // std::cout << " voxel pos (" << voxelPos.x << ", " << voxelPos.y << ", " << voxelPos.z << ")\n"; 
+                ospcommon::math::vec2f pixel = arcballCamera.worldToPixel((ospcommon::math::vec3f)voxelPos, imgSize);
+                ospcommon::math::vec2i tileID = pixelToTileID(pixel, tileSize);
+                tileIDs.push_back(tileID);
+            }
+        // }
+        std::cout << "tileId size before remove = " << tileIDs.size() << std::endl;
+        // Debug
+        // for(int x = 0; x < 500; x++){
+        //     std::cout << "x = " << x << " tile id = " << tileIDs[x].x << " " << tileIDs[x].y << std::endl;
+        // }
+        remove(tileIDs);
+        // std::vector<ospcommon::math::vec2i>::iterator ip = std::unique(tileIDs.begin(), tileIDs.begin() + tileIDs.size()); 
+        // tileIDs.resize(std::distance(tileIDs.begin(), ip)); 
+        // Remove duplicated tileIDs
+        std::cout << "tileId size after remove = " << tileIDs.size() << std::endl;
+        for(int s = 0; s < tileIDs.size(); s++){
+            std::cout << "tile id = (" << tileIDs[s].x << ", " << tileIDs[s].y << ")" << std::endl;
+        }
+        tileIDs.clear();
     }
+
+    std::cout << "================================================" << std::endl;
+
+
+    // std::cout << std::endl;
+    // std::cout << "There are " << volumes[0].voxels.size() << " voxels in total." << std::endl;
+    // for(auto d : differentialVolumes){
+    //     float percentage = d.indices.size() / (float)volumes[0].voxels.size() * 100;
+    //     std::cout << "differential volume has " << d.indices.size() << " differences. Changed " <<  percentage << " percentage" << std::endl;
+    // }
 
     // Calculate the 
 

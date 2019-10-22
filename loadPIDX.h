@@ -43,7 +43,7 @@ struct PIDXVolume {
                size_t currentTimestep);
     
     //PIDXVolume(const PIDXVolume &p) = delete;
-    PIDXVolume& operator=(const PIDXVolume &p) = delete;
+    // PIDXVolume& operator=(const PIDXVolume &p) = delete;
     ~PIDXVolume();
                             
     private:
