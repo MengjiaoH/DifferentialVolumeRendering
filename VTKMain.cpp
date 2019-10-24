@@ -43,7 +43,7 @@ int main(int argc, const char** argv)
     std::vector<DifferentialVolume<float>> differentialVolumes;
     ospcommon::math::box3f worldBound = ospcommon::math::empty;
     // only load 2 time steps for testing now 
-    int count = 4;
+    int count = 16;
 
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
     for(auto t : files){
@@ -89,28 +89,48 @@ int main(int argc, const char** argv)
                 tileIDs.push_back(tileID);
             }
         }
-        std::cout << "tileId size before remove = " << tileIDs.size() << std::endl;
+        // std::cout << "time step " << i << " tileId size before remove = " << tileIDs.size() << std::endl;
         // Debug
-        // for(int x = 0; x < 500; x++){
-        //     std::cout << "x = " << x << " tile id = " << tileIDs[x].x << " " << tileIDs[x].y << std::endl;
+        // int px = 2;
+        // int py = 2;
+        // for(int x = 0; x < tileIDs.size(); x++){
+        //     if(tileIDs[x].x != px || tileIDs[x].y != py){
+        //         // std::cout << "x = " << x << " tile id = " << tileIDs[x].x << " " << tileIDs[x].y << std::endl;
+        //         px = tileIDs[x].x;
+        //         py = tileIDs[x].y;
+        //     }
+
         // }
         // Remove duplicated tileIDs
         remove(tileIDs);
         // std::vector<ospcommon::math::vec2i>::iterator ip = std::unique(tileIDs.begin(), tileIDs.begin() + tileIDs.size()); 
         // tileIDs.resize(std::distance(tileIDs.begin(), ip)); 
 
-        std::cout << "tileId size after remove = " << tileIDs.size() << std::endl;
-        for(int s = 0; s < tileIDs.size(); s++){
-            std::cout << "tile id = (" << tileIDs[s].x << ", " << tileIDs[s].y << ")" << std::endl;
-        }
+        std::cout << "time step " << i << "tileId size after remove = " << tileIDs.size() << std::endl;
+        // for(int s = 0; s < tileIDs.size(); s++){
+        //     std::cout << "tile id = (" << tileIDs[s].x << ", " << tileIDs[s].y << ")" << std::endl;
+        // }
         tileList tile_list(tileIDs);
         tileLists.push_back(tile_list);
         differentialVolumes.push_back(differentialVolume);
         tileIDs.clear();
     }
+
+    // std::cout << "Time step 1 need to update " << tileLists[0].tileID.size() << " tiles. "<< std::endl;
+    // std::sort(tileLists[0].tileID.begin(), tileLists[0].tileID.end());
+    // for(int i = 1; i < tileLists.size(); i++){
+    //     int numTiles = 0;
+    //     std::sort(tileLists[i].tileID.begin(), tileLists[i].tileID.end());
+    //     for(int t = 0; t < tileLists[i].tileID.size(); t++){
+    //         if(tileLists[i].tileID[t] != tileLists[i-1].tileID[t]){
+    //             numTiles++;
+    //         }
+    //     }
+    //     std::cout << "Time step " << i + 1 << " need to update " << numTiles << "tiles. " << std::endl;
+    // }
+
     // Remove all other volumes and only keep the first timestep
     volumes.erase (volumes.begin() + 1, volumes.end() - 1);
-
 
     std::cout << "================================================" << std::endl;
     std::cout << std::endl;
@@ -142,9 +162,9 @@ int main(int argc, const char** argv)
         // tileIDs.resize(std::distance(tileIDs.begin(), ip)); 
         // Remove duplicated tileIDs
         std::cout << "tileId size after remove = " << tileIDs.size() << std::endl;
-        for(int s = 0; s < tileIDs.size(); s++){
-            std::cout << "tile id = (" << tileIDs[s].x << ", " << tileIDs[s].y << ")" << std::endl;
-        }
+        // for(int s = 0; s < tileIDs.size(); s++){
+        //     std::cout << "tile id = (" << tileIDs[s].x << ", " << tileIDs[s].y << ")" << std::endl;
+        // }
         tileIDs.clear();
     }
 

@@ -65,8 +65,8 @@ int main(int argc, const char** argv)
     worldBound = ospcommon::math::box3f(ospcommon::math::vec3f(0, 0, 0), ospcommon::math::vec3f(volumes[0].fullDims.x, volumes[0].fullDims.y, volumes[0].fullDims.z));
     
     // Set frameBuffer size and tile size
-    ospcommon::math::vec2i imgSize(1900, 1200);
-    ospcommon::math::vec2i tileSize(256);
+    ospcommon::math::vec2i imgSize(512, 512);
+    ospcommon::math::vec2i tileSize(32);
 
     // Set camera 
     ArcballCamera arcballCamera(worldBound, imgSize);
@@ -92,7 +92,7 @@ int main(int argc, const char** argv)
                 tileIDs.push_back(tileID);
             }
         }
-        std::cout << "tileId size before remove = " << tileIDs.size() << std::endl;
+        // std::cout << "tileId size before remove = " << tileIDs.size() << std::endl;
         // Debug
         // for(int x = 0; x < 500; x++){
         //     std::cout << "x = " << x << " tile id = " << tileIDs[x].x << " " << tileIDs[x].y << std::endl;
@@ -102,11 +102,11 @@ int main(int argc, const char** argv)
         remove(tileIDs);
 
         std::cout << "tileId size after remove = " << tileIDs.size() << std::endl;
-        for(int s = 0; s < tileIDs.size(); s++){
-            std::cout << "tile id = (" << tileIDs[s].x << ", " << tileIDs[s].y << ")" << std::endl;
-        }
+        // for(int s = 0; s < tileIDs.size(); s++){
+        //     std::cout << "tile id = (" << tileIDs[s].x << ", " << tileIDs[s].y << ")" << std::endl;
+        // }
 
-        std::cout << "tileId size after remove = " << tileIDs.size()  << " tile ID = (" << tileIDs[0].x << ", " << tileIDs[0].y << ")" << std::endl;
+        // std::cout << "tileId size after remove = " << tileIDs.size()  << " tile ID = (" << tileIDs[0].x << ", " << tileIDs[0].y << ")" << std::endl;
         tileList tile_list(tileIDs);
         tileLists.push_back(tile_list);
         differentialVolumes.push_back(differentialVolume);
@@ -135,7 +135,7 @@ int main(int argc, const char** argv)
                 tileIDs.push_back(tileID);
             }
         // }
-        std::cout << "tileId size before remove = " << tileIDs.size() << std::endl;
+        // std::cout << "tileId size before remove = " << tileIDs.size() << std::endl;
         // Debug
         // for(int x = 0; x < 500; x++){
         //     std::cout << "x = " << x << " tile id = " << tileIDs[x].x << " " << tileIDs[x].y << std::endl;
@@ -145,9 +145,9 @@ int main(int argc, const char** argv)
         // tileIDs.resize(std::distance(tileIDs.begin(), ip)); 
         // Remove duplicated tileIDs
         std::cout << "tileId size after remove = " << tileIDs.size() << std::endl;
-        for(int s = 0; s < tileIDs.size(); s++){
-            std::cout << "tile id = (" << tileIDs[s].x << ", " << tileIDs[s].y << ")" << std::endl;
-        }
+        // for(int s = 0; s < tileIDs.size(); s++){
+        //     std::cout << "tile id = (" << tileIDs[s].x << ", " << tileIDs[s].y << ")" << std::endl;
+        // }
         tileIDs.clear();
     }
 

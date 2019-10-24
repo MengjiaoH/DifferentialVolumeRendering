@@ -7,10 +7,10 @@
 
 ospcommon::math::vec3i indexToPosition(int index, ospcommon::math::vec3i dims)
 {
-    int z = index / (dims.x * dims.y);
+    int z = std::floor(index / (dims.x * dims.y));
     int left = std::remainder(index, dims.x * dims.y);
 
-    int y = left / dims.x;
+    int y = std::floor(left / dims.x);
     int x = std::remainder(left, dims.x);
 
     return ospcommon::math::vec3i(x, y, z);
@@ -20,8 +20,7 @@ ospcommon::math::vec2i pixelToTileID(ospcommon::math::vec2f pixel, ospcommon::ma
 {
     // std::cout << "pixel (" << pixel.x << ", " << pixel.y << ") " << std::endl;
     ospcommon::math::vec2i tileId = ospcommon::math::vec2i(std::ceil(pixel.x / tileSize.x), std::ceil(pixel.y / tileSize.y));
-
-    // std::cout << 
+    // std::cout << "pixel (" << pixel.x << ", " << pixel.y << ") tile id (" << tileId.x << ", " << tileId.y << ")"  << std::endl;
     return tileId;
 }
 

@@ -56,3 +56,11 @@ struct sort_timestep
         return a.timeStep < b.timeStep;
     }
 };
+
+struct sort_tileID
+{
+    inline bool operator() (ospcommon::math::vec2i &a, ospcommon::math::vec2i &b){
+        return (a.x < b.x) && (a.y < b.y);
+    }
+
+};

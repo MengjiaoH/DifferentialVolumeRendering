@@ -110,23 +110,60 @@ ospcommon::math::quaternionf ArcballCamera::screenToArcball(
 
  ospcommon::math::vec2f ArcballCamera::worldToPixel(ospcommon::math::vec3f worldPos, ospcommon::math::vec2i imgSize)
  {
-   ospcommon::math::vec3f up = upDir();
-   ospcommon::math::vec3f target = lookDir();
-   ospcommon::math::vec3f right = cross(up, target);
+   ospcommon::math::vec3f N = lookDir();
+   ospcommon::math::vec3f U = upDir();
+   U = cross(U, N);
+   ospcommon::math::vec3f V = cross(N, U);
+   
    ospcommon::math::vec3f pos = eyePos();
-  //  std::cout << "right " << right.x << " " << right.y << " " << right.z << std::endl;
-   ospcommon::math::vec3f cameraUp = cross(target, right);
-  //  std::cout << "up " << cameraUp.x << " " << cameraUp.y << " " << cameraUp.z << std::endl;
+
 
    ospcommon::math::LinearSpace3f cameraToworld = 
-    ospcommon::math::LinearSpace3f(right.x, cameraUp.x, target.x, 
-                                   right.y, cameraUp.y, target.y,
-                                   right.z, cameraUp.z, target.z);
+    ospcommon::math::LinearSpace3f(U.x, V.x, N.x, 
+                                   U.y, V.y, N.y,
+                                   U.z, V.z, N.z);
 
   ospcommon::math::vec3f cameraSpace = cameraToworld * worldPos;
-  cameraSpace = cameraSpace - pos;
-  ospcommon::math::vec2f screenPos = ospcommon::math::vec2f(-cameraSpace.x / cameraSpace.z, -cameraSpace.y / cameraSpace.z);
-  ospcommon::math::vec2f rasterPos = ospcommon::math::vec2f((screenPos.x + imgSize.x / 2 ) / imgSize.x, (screenPos.y + imgSize.y / 2 ) / imgSize.y);
+
+  ospcommon::math::vec3f v = cameraSpace - pos;
+
+  ospcommon::math::vec3f r = normalize(v);
   
-  return ospcommon::math::vec2f(rasterPos.x * imgSize.x, rasterPos.y * imgSize.y);
+  const float denom = dot(-r, -N);
+  if (denom == 0.0) {
+    return ospcommon::math::vec2f(-1, -1);
+  }
+  
+  const float t = 1.0 / denom;
+  ospcommon::math::vec3f dir_00 = N - .5f * V - .5f * U;
+
+  const ospcommon::math::vec3f screenDir = r * t - dir_00;
+  ospcommon::math::vec2f sp = ospcommon::math::vec2f(dot(screenDir, normalize(V) * imgSize.x), dot(screenDir, normalize(U) * imgSize.y)) / imgSize;
+
+  sp.x = (sp.x * 0.5f) + 0.5f;
+  sp.y = (sp.y * 0.5f) + 0.5f;
+
+  // if(sp.x <= 0.f || sp.y <= 0.f){
+  //   std::cout << "sp x" << sp.x << " y" << sp.y << std::endl;
+  // }
+
+
+
+
+  sp = sp * imgSize;
+  // const float depth = sign(t) * length(v);
+
+  // std::cout << "screen pos = (" << sp.x << ", " << sp.y << std::endl;
+
+  return sp;
+
+
+
+  // ospcommon::math::vec2f screenPos = ospcommon::math::vec2f(-cameraSpace.x / (float)cameraSpace.z, -cameraSpace.y / (float)cameraSpace.z);
+  // ospcommon::math::vec2f rasterPos = ospcommon::math::vec2f((screenPos.x + imgSize.x / 2 ) / imgSize.x, (screenPos.y + imgSize.y / 2 ) / imgSize.y);
+
+  // std::cout << "camera space pos " << cameraSpace.x << " " << cameraSpace.y << " " << cameraSpace.z <<  std::endl;
+  // std::cout << "screen space " << screenPos.x << " " << screenPos.y << std::endl;
+  
+  // return ospcommon::math::vec2f(rasterPos.x * imgSize.x, rasterPos.y * imgSize.y);
  }
