@@ -33,3 +33,16 @@ void remove(std::vector<ospcommon::math::vec2i> &v)
 
 	v.erase(end, v.end());
 }
+
+template <typename T>
+void compute_deltas(std::vector<T> &v1, std::vector<T> &v2)
+{
+    for(int i = 0; i < v1.size(); ++i){
+        double v11 = v1[i];
+        double v22 = v2[i];
+        v2[i] = v22 - v11;
+        // if(v11 == v22){
+        //     v2[i] == 0;
+        // }
+    }
+}

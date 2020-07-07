@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <iostream>
+#include <vector>
 #include <fstream>
 #include <limits>
 #include <chrono>
@@ -15,6 +16,6 @@
 
 #include "dataType.h"
 
-void loadVTK(std::string file, Volume<float> &volume);
+void loadVTK(std::string file, std::vector<float> &volume, ospcommon::math::vec3i &dims);
 
 

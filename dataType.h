@@ -17,8 +17,8 @@ struct timesteps
 template<typename T> struct Volume
 {
     std::vector<T> voxels;
-    ospcommon::math::vec2f range;
-    ospcommon::math::vec3i dim;
+    // ospcommon::math::vec2f range;
+    // ospcommon::math::vec3i dim;
 };
 
 template<typename T> struct DifferentialVolume

@@ -42,12 +42,19 @@ struct PIDXVolume {
                const std::string &currentVariableName, 
                size_t currentTimestep);
     
+    PIDXVolume(const std::string &path, 
+               const std::string &currentVariableName, 
+               size_t currentTimestep,
+               ospcommon::math::vec3i globalDims,
+               std::vector<char> voxels);
+    
     //PIDXVolume(const PIDXVolume &p) = delete;
     // PIDXVolume& operator=(const PIDXVolume &p) = delete;
     ~PIDXVolume();
                             
     private:
         void update();
-        void set_pidx_file(int ts);
-        void set_pidx_variable();
+        // void set_pidx_file(int ts);
+        // void set_pidx_variable();
 };
+

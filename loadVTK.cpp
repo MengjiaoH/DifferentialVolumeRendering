@@ -1,6 +1,6 @@
 #include "loadVTK.h"
 
-void loadVTK(std::string file, Volume<float> &volume)
+void loadVTK(std::string file, std::vector<float> &volume, ospcommon::math::vec3i &dims)
 {
     std::cout << "Start Loading " << file << std::endl;
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
@@ -13,7 +13,8 @@ void loadVTK(std::string file, Volume<float> &volume)
     int dim[3] = {0, 0, 0};
     grid -> GetDimensions(dim);
     std::cout << " Dimensions " << dim[0] << " " << dim[1] << " " << dim[2] << std::endl;
-    volume.dim.x = dim[0]; volume.dim.y = dim[1]; volume.dim.z = dim[2];
+    dims[0] = dim[0]; dims[1] = dim[1]; dims[2] = dim[2]; 
+    // volume.dim.x = dim[0]; volume.dim.y = dim[1]; volume.dim.z = dim[2];
     //Get Data Array
     vtkSmartPointer<vtkGeometryFilter> geometryFilter = vtkSmartPointer<vtkGeometryFilter>::New();
     geometryFilter ->SetInputData(grid);
@@ -40,22 +41,22 @@ void loadVTK(std::string file, Volume<float> &volume)
         for(int i = 0; i < idNumPointsInFile; i++){
             float value;
             value = array->GetValue(i);
-            volume.voxels.push_back(value);
+            volume.push_back(value);
             // std::cout << i << ": " << value << std::endl;
-            if(value < Min){
-                Min = value;
-            }
-            if(value > Max){
-                Max = value;
-            }
+            // if(value < Min){
+            //     Min = value;
+            // }
+            // if(value > Max){
+            //     Max = value;
+            // }
         }
     }else{
         std::cout << "The file " << file
                 << " does not have a PointData array named " << arrayName
                 << std::endl;
     }
-    volume.range.x = Min;
-    volume.range.y = Max;
+    // volume.range.x = Min;
+    // volume.range.y = Max;
     std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 

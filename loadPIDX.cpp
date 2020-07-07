@@ -99,6 +99,30 @@ PIDXVolume::PIDXVolume(const std::string &path, const std::string &currentVariab
     update();
 }
 
+// PIDXVolume::PIDXVolume(const std::string &path, 
+//                const std::string &currentVariableName, 
+//                size_t currentTimestep,
+//                ospcommon::math::vec3i globalDims,
+//                std::vector<Volume<float>> volumes)
+//                : datasetPath(path), currentVariableName(currentVariableName), currentTimestep(currentTimestep)
+// {
+//     std::cout << "debug 0" << std::endl;
+//     PIDX_CHECK(PIDX_create_access(&pidxAccess));
+//     std::cout << "debug 1" << std::endl;
+//     PIDX_CHECK(PIDX_set_mpi_access(pidxAccess, MPI_COMM_WORLD));
+//     std::cout << "debug 2" << std::endl;
+//     PIDX_create_metadata_cache(&cache);
+
+//     fullDims.x = globalDims.x;
+//     fullDims.y = globalDims.y;
+//     fullDims.z = globalDims.z;
+//     localDims = fullDims;
+//     localOffset = vec3sz(0.0f);
+//     set_pidx_file(currentTimestep);
+//     set_pidx_variable();
+//     PIDX_CHECK(PIDX_close(outpidxFile));
+// }
+
 PIDXVolume::~PIDXVolume() {
     //PIDX_close_access(pidxAccess);
     //volume.release();
@@ -221,4 +245,50 @@ void PIDXVolume::update(){
     //if (PIDX_free_metadata_cache(cache) != PIDX_success)
         //throw std::runtime_error("PIDX_free_meta_data_cache");
 }
+
+
+// void PIDXVolume::set_pidx_file(int ts)
+// {
+//     PIDX_return_code ret;
+//     // Create IDX file
+//     std::string output_file_name = "/home/sci/mengjiao/Desktop/pidx_loader/data/" + std::to_string(currentTimestep) + ".idx";
+//     PIDX_point global_size;
+//     PIDX_set_point(global_size, fullDims.x, fullDims.y, fullDims.z);
+//     ret = PIDX_file_create(output_file_name.c_str(), PIDX_MODE_CREATE, pidxAccess, global_size, &outpidxFile);
+//     if (ret != PIDX_success) throw std::runtime_error("PIDX_file_create\n");
+    
+//     PIDX_set_current_time_step(outpidxFile, ts);
+//     PIDX_set_variable_count(outpidxFile, 1);
+
+//     PIDX_set_meta_data_cache(outpidxFile, cache);
+//     PIDX_set_io_mode(outpidxFile, PIDX_IDX_IO);
+    
+//     PIDX_set_block_count(outpidxFile, 128);
+//     PIDX_set_block_size(outpidxFile, 15);
+
+//     PIDX_set_cache_time_step(outpidxFile, 0);
+// }
+
+// void PIDXVolume::set_pidx_variable()
+// {
+//     PIDX_return_code ret = 0;
+//     std::vector<char> name(currentVariableName.c_str(), currentVariableName.c_str() + currentVariableName.size() + 1);
+//     std::cout << "name " << name << std::endl;
+//     // create variable 
+
+    
+//     ret = PIDX_variable_create(name.data(), bitsPerSample * 1, var->type_name, &var);
+//     if(ret != PIDX_success) throw std::runtime_error("PIDX_variable_create");
+
+//     PIDX_point local_size, local_offset;
+//     PIDX_set_point(local_size, localDims.x, localDims.y, localDims.z);
+//     PIDX_set_point(local_offset, localOffset.x, localOffset.y, localOffset.z);
+//     ret = PIDX_variable_write_data_layout(var, local_offset, local_size, data.data(), PIDX_row_major);
+//     if(ret != PIDX_success) throw std::runtime_error("PIDX_variable_write_data_layout");
+    
+//     ret = PIDX_append_and_write_variable(outpidxFile, var);
+//     if(ret != PIDX_success) throw std::runtime_error("PIDX_append_and_write_variable");
+
+//     return;
+// }
 
